@@ -1,0 +1,71 @@
+<project name="2017_Lights" default="dist" basedir=".">
+
+	<property name="src.dir" location="${basedir}/src" description="Directory of all Java source files" />
+	<property name="test.dir" location="${basedir}/test" description="Directory for all unit test code" />
+	<property name="build.dir" location="${basedir}/target/classes" description="Directory for intermediate compiled files" />
+	<property name="build.test.dir" location="${basedir}/target/classes_tests" />
+	<property name="report.test.dir" location="${basedir}/target/reports_tests" />
+	<property name="dist.dir" location="${basedir}/target" description="Directory for final distribution file" />
+	<property name="install.dir" location="${user.home}" />
+	<property name="networktables.jar" location="${basedir}/lib/NetworkTables.jar" />
+	<property name="junit.jar" location="${basedir}/lib/junit.jar" />
+	<property name="hamcrest.jar" location="${basedir}/lib/hamcrest.jar" />
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.test.dir}" />
+		<mkdir dir="${report.test.dir}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="true" source="1.7">
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<pathelement location="${networktables.jar}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="compile" description="execute all unit tests">
+		<javac srcdir="${test.dir}" destdir="${build.test.dir}" includeantruntime="true" source="1.7">
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<pathelement location="${junit.jar}" />
+				<pathelement location="${hamcrest.jar}" />
+			</classpath>
+		</javac>
+		<junit>
+			<classpath>
+				<pathelement location="${build.dir}" />
+				<pathelement location="${build.test.dir}" />
+				<pathelement location="${junit.jar}" />
+				<pathelement location="${hamcrest.jar}" />
+			</classpath>
+			<formatter type="xml" />
+			<batchtest todir="${report.test.dir}">
+				<fileset dir="${test.dir}" includes="**/*Test.java" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<mkdir dir="${dist.dir}" />
+		<jar jarfile="${dist.dir}/${ant.project.name}.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="org.firebears.lights.LightsMain" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="install" depends="dist" description="Builds and installs the distribution">
+		<mkdir dir="${install.dir}" />
+		<copy file="${dist.dir}/${ant.project.name}.jar" todir="${install.dir}" />
+		<copy file="${networktables.jar}" todir="${install.dir}" />
+	</target>
+</project>

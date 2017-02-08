@@ -1,0 +1,6 @@
+#!/bin/sh
+PROG_NAME=lights
+if [ ! -d /var/log/${PROG_NAME} ] ; then
+	mkdir -p /var/log/${PROG_NAME}
+fi
+exec multilog t /var/log/${PROG_NAME}
