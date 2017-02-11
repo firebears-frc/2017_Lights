@@ -12,6 +12,7 @@ import examples.Fire;
 import examples.LiftLights;
 import examples.MovingPixel;
 import examples.Pulsing;
+import examples.Range;
 import examples.Spark;
 import examples.TheaterLights;
 import examples.Crazy;
@@ -30,10 +31,10 @@ import examples.Crazy;
 public class LightsMain {
 
 	// Constants for pixel strips
-	public static final String STRIP_CHASSIS_LEFT = "strip_chassis_left";
-	public static final String STRIP_CHASSIS_RIGHT = "strip_chassis_right";
-	public static final String STRIP_CELEBRATE = "strip_celebrate";
-
+	public static final String STRIP_CHASSIS_FRONT = "strip_chassis_front";
+	public static final String STRIP_CHASSIS_BACK = "strip_chassis_back";
+	public static final String STRIP_SIGNAL = "strip_celebrate";
+	public static final String STRIP_CHASSIS_BOTTOM = "strip_chassis_bottom";
 	// Constants for  animations
 	public static final String ANIM_PULSING_GREEN = "ANIM_PULSING_GREEN";
 	public static final String ANIM_PULSING_RED = "ANIM_PULSING_RED";
@@ -49,6 +50,10 @@ public class LightsMain {
 	public static final String ANIM_SPARK = "ANIM_SPARK";
 	public static final String ANIM_THEATER = "ANIM_THEATER";
 	public static final String ANIM_EXPLODE = "ANIM_EXPLODE";
+	public static final String ANIM_RANGE = "ANIM_RANGE";
+	public static final String ANIM_IGNITE = "ANIM_IGNITE";
+	public static final String ANIM_SWEEPERFORWARDS = "ANIM_SWEEPERFORWARDS";
+	public static final String ANIM_SWEEPERBACKWARDS = "ANIM_SWEEPERBACKWARDS";
 
 	//Color Schemes
 	public static final int CS_RED = 0;
@@ -96,6 +101,8 @@ public class LightsMain {
 		watcher.addAnimation(ANIM_SPARK, new Spark());
 		watcher.addAnimation(ANIM_THEATER, new TheaterLights(0xFFAA00));
 		watcher.addAnimation(ANIM_EXPLODE, new Exploding());
+		watcher.addAnimation(ANIM_RANGE, new Range());
+		
 
 		table.addTableListener(watcher, true);
 		return watcher;
@@ -117,9 +124,10 @@ public class LightsMain {
 
 		// Initialize pixel strips
 
-		TableWatcher stripChassisLeft = initializePixelStripAnimations(fadeCandy, table, 0, 64, STRIP_CHASSIS_LEFT);
-		TableWatcher stripChassisRight = initializePixelStripAnimations(fadeCandy, table, 1, 64, STRIP_CHASSIS_RIGHT);
-		TableWatcher stripCelebrate = initializePixelStripAnimations(fadeCandy, table, 2, 56, STRIP_CELEBRATE);
+		TableWatcher stripChassisFront = initializePixelStripAnimations(fadeCandy, table, 0, 12, STRIP_CHASSIS_FRONT);
+		TableWatcher stripChassisBack = initializePixelStripAnimations(fadeCandy, table, 1, 8, STRIP_CHASSIS_BACK);
+		TableWatcher stripSignal = initializePixelStripAnimations(fadeCandy, table, 2, 12, STRIP_SIGNAL);
+		TableWatcher stripChassisBottom = initializePixelStripAnimations(fadeCandy, table, 3, 8, STRIP_CHASSIS_BOTTOM);
 
 //		stripChassisLeft.setAnimation(ANIM_FIRE);
 //		stripChassisRight.setAnimation(ANIM_FIRE);
