@@ -1,5 +1,7 @@
 package examples;
 
+import java.awt.Robot;
+
 import opc.Animation;
 import opc.OpcClient;
 import opc.OpcDevice;
@@ -61,7 +63,7 @@ public class Fire extends Animation {
 	@Override
 	public boolean draw(PixelStrip strip) {
 		int a, ct1, ct2;
-
+		
 		if(prevtime + 100 < millis()) {
 			prevtime = millis();
 			for (int p = 0; p < (strip.getPixelCount() / 4); p++) {
