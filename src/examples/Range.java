@@ -8,7 +8,7 @@ public class Range extends Animation {
 
 	double range;
 	double stripSize = 32;
-	
+
 	int range2;
 	int random = 1;
 	Random rand = new Random();
@@ -20,20 +20,16 @@ public class Range extends Animation {
 	public void reset(PixelStrip strip) {
 		strip.clear();
 		stripSize = strip.getPixelCount();
-		random = rand.nextInt(strip.getPixelCount() - (int)range) + (int)range;
 	}
 
 	public boolean draw(PixelStrip strip) {
-		range2 = strip.getPixelCount() - (int)range + (int)range;
-		if (range2 <= strip.getPixelCount()) {
-			for (int p = 0; p < (range2); p++) {
-				strip.setPixelColor(p, 0x00cc00);
-			}
-				strip.setPixelColor(random, 0xff0000);
-				random = rand.nextInt(strip.getPixelCount());
-				strip.setPixelColor(random, 0xcc3300);
-				random = rand.nextInt(strip.getPixelCount());
-			}
+		range2 = strip.getPixelCount() - (int) range;
+		for (int p = 0; p < (range2); p++) {
+			strip.setPixelColor(p, 0x00cc00);
+		}
+		for (int p = range2; p < stripSize; p++) {
+			strip.setPixelColor(p, 0xff0000);
+		}
 		return true;
 	}
 
