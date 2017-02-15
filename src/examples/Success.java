@@ -4,32 +4,39 @@ import java.util.Random;
 
 import opc.*;
 
-public class Range extends Animation {
-	//this only works with some sort of sensor
+public class Success extends Animation {
 
-	double range;
-	double stripSize = 32;
+	int stage = 1;
 
-	int range2;
-	int random = 1;
-	Random rand = new Random();
+	public Success() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public void setValue(double n) {
-		range = Math.min(n, stripSize);
 	}
 
 	public void reset(PixelStrip strip) {
 		strip.clear();
-		stripSize = strip.getPixelCount();
+		setTimeout(0.5);
 	}
 
 	public boolean draw(PixelStrip strip) {
-		range2 = strip.getPixelCount() - (int) range;
-		for (int p = 0; p < (range2); p++) {
-			strip.setPixelColor(p, 0x00cc00);
+		if (stage == 1){
+			if (isTimedOut()){
+				stage = 2;
+				for (int p = 0; p < strip.getPixelCount(); p++) {
+					strip.setPixelColor(p, 0x00ff00);
+				}
+				setTimeout(0.5);
+			}
 		}
-		for (int p = range2; p < stripSize; p++) {
-			strip.setPixelColor(p, 0xff0000);
+		if (stage == 2){
+			if (isTimedOut()){
+				for (int p = 0; p < strip.getPixelCount(); p++) {
+					strip.setPixelColor(p, 0x000000);
+				}
+				setTimeout(0.5);
+			}
 		}
 		return true;
 	}
@@ -48,7 +55,7 @@ public class Range extends Animation {
 
 		PixelStrip strip1 = fadeCandy.addPixelStrip(PIXELSTRIP_PIN, STRIP1_COUNT);
 
-		strip1.setAnimation(new Range());
+		strip1.setAnimation(new Success());
 		for (int i = 0; i < 1000; i++) {
 			server.animate();
 			Thread.sleep(100);

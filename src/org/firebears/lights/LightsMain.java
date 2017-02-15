@@ -1,32 +1,37 @@
 package org.firebears.lights;
 
-import opc.OpcClient;
-import opc.OpcDevice;
-import opc.PixelStrip;
+import org.junit.internal.runners.statements.Fail;
+
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import examples.Binary;
 import examples.Caterpillar;
+import examples.Crazy;
+import examples.FailAnimation;
 import examples.Exploding;
 import examples.Exploding_R_W_B;
 import examples.Fire;
-import examples.LiftLights;
+import examples.High;
+import examples.Low;
 import examples.MovingPixel;
 import examples.Pulsing;
 import examples.Range;
 import examples.Spark;
+import examples.Success;
+import examples.SweeperBackward;
+import examples.SweeperForward;
 import examples.TheaterLights;
-import examples.Crazy;
+import opc.OpcClient;
+import opc.OpcDevice;
+import opc.PixelStrip;
 
 /**
- * This program allows the robot to control lights connected
- * to the Fadecandy server.  The robot will make changes into
- * the "lights" network table.  This program will detect those
- * changes and cause the animations to change on the pixel
- * strips.
+ * This program allows the robot to control lights connected to the Fadecandy
+ * server. The robot will make changes into the "lights" network table. This
+ * program will detect those changes and cause the animations to change on the
+ * pixel strips.
  * <p>
- * This program can run on any computer in the robot's
- * subnet.  It may run on the same Raspberry Pi where the
- * Fadecandy server is running.
+ * This program can run on any computer in the robot's subnet. It may run on the
+ * same Raspberry Pi where the Fadecandy server is running.
  */
 public class LightsMain {
 
@@ -35,7 +40,7 @@ public class LightsMain {
 	public static final String STRIP_CHASSIS_BACK = "strip_chassis_back";
 	public static final String STRIP_SIGNAL = "strip_celebrate";
 	public static final String STRIP_CHASSIS_BOTTOM = "strip_chassis_bottom";
-	// Constants for  animations
+	// Constants for animations
 	public static final String ANIM_PULSING_GREEN = "ANIM_PULSING_GREEN";
 	public static final String ANIM_PULSING_RED = "ANIM_PULSING_RED";
 	public static final String ANIM_PULSING_BLUE = "ANIM_PULSING_BLUE";
@@ -54,8 +59,12 @@ public class LightsMain {
 	public static final String ANIM_IGNITE = "ANIM_IGNITE";
 	public static final String ANIM_SWEEPERFORWARDS = "ANIM_SWEEPERFORWARDS";
 	public static final String ANIM_SWEEPERBACKWARDS = "ANIM_SWEEPERBACKWARDS";
-
-	//Color Schemes
+	public static final String ANIM_FAIL = "ANIM_FAIL";
+	public static final String ANIM_SUCCESS = "ANIM_SUCCESS";
+	public static final String ANIM_LOW = "ANIM_LOW";
+	public static final String ANIM_HIGH = "ANIM_HIGH";
+	
+	// Color Schemes
 	public static final int CS_RED = 0;
 	public static final int CS_BLUE = 1;
 	public static final int CS_YELLOW = 2;
@@ -67,25 +76,19 @@ public class LightsMain {
 	public static final int CS_WHITE2 = 8;
 
 	/** Host name or IP address of the Network Table server. */
-	public static final String NT_SERVER_HOST
-		= System.getProperty("networkTable.server", "roborio-2846-frc.local");
+	public static final String NT_SERVER_HOST = System.getProperty("networkTable.server", "roborio-2846-frc.local");
 
 	/** Host name or IP address of the Fadecandy server. */
-	public static final String FC_SERVER_HOST
-		= System.getProperty("fadecandy.server", "raspberrypi.local");
+	public static final String FC_SERVER_HOST = System.getProperty("fadecandy.server", "raspberrypi.local");
 
 	/** Port number of the Fadecandy server. */
-	public static final int FC_SERVER_PORT
-		= Integer.parseInt(System.getProperty("fadecandy.port", "7890"));
+	public static final int FC_SERVER_PORT = Integer.parseInt(System.getProperty("fadecandy.port", "7890"));
 
 	/** Whether to display extra information about internal processes. */
-	public static final boolean VERBOSE
-		= "true".equals(System.getProperty("verbose", "false"));
+	public static final boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 
-	private static TableWatcher initializePixelStripAnimations(
-		OpcDevice fadeCandy, NetworkTable table,
-		int pin, int len, String name)
-	{
+	private static TableWatcher initializePixelStripAnimations(OpcDevice fadeCandy, NetworkTable table, int pin,
+			int len, String name) {
 		PixelStrip strip = fadeCandy.addPixelStrip(pin, len, name);
 		TableWatcher watcher = new TableWatcher(name, strip);
 
@@ -102,7 +105,12 @@ public class LightsMain {
 		watcher.addAnimation(ANIM_THEATER, new TheaterLights(0xFFAA00));
 		watcher.addAnimation(ANIM_EXPLODE, new Exploding());
 		watcher.addAnimation(ANIM_RANGE, new Range());
-		
+		watcher.addAnimation(ANIM_SWEEPERFORWARDS, new SweeperForward());
+		watcher.addAnimation(ANIM_SWEEPERBACKWARDS, new SweeperBackward());
+		watcher.addAnimation(ANIM_FAIL, new FailAnimation());
+		watcher.addAnimation(ANIM_SUCCESS, new Success());
+		watcher.addAnimation(ANIM_LOW, new Low());
+		watcher.addAnimation(ANIM_HIGH, new High());
 
 		table.addTableListener(watcher, true);
 		return watcher;
@@ -114,13 +122,16 @@ public class LightsMain {
 		NetworkTable.setClientMode();
 		NetworkTable.setIPAddress(NT_SERVER_HOST);
 		NetworkTable table = NetworkTable.getTable("lights");
-		if (VERBOSE) System.out.println("# network_table.server=" + NT_SERVER_HOST);
+		if (VERBOSE)
+			System.out.println("# network_table.server=" + NT_SERVER_HOST);
 
 		// Initialize Fadecandy server
 		OpcClient server = new OpcClient(FC_SERVER_HOST, FC_SERVER_PORT);
 		OpcDevice fadeCandy = server.addDevice();
-		if (VERBOSE) System.out.println("# fadecandy.server=" + FC_SERVER_HOST);
-		if (VERBOSE) System.out.println("# fadecandy.port=" + FC_SERVER_PORT);
+		if (VERBOSE)
+			System.out.println("# fadecandy.server=" + FC_SERVER_HOST);
+		if (VERBOSE)
+			System.out.println("# fadecandy.port=" + FC_SERVER_PORT);
 
 		// Initialize pixel strips
 
@@ -129,9 +140,9 @@ public class LightsMain {
 		TableWatcher stripSignal = initializePixelStripAnimations(fadeCandy, table, 2, 12, STRIP_SIGNAL);
 		TableWatcher stripChassisBottom = initializePixelStripAnimations(fadeCandy, table, 3, 8, STRIP_CHASSIS_BOTTOM);
 
-//		stripChassisLeft.setAnimation(ANIM_FIRE);
-//		stripChassisRight.setAnimation(ANIM_FIRE);
-//		stripCelebrate.setAnimation(ANIM_FIRE);
+		// stripChassisLeft.setAnimation(ANIM_FIRE);
+		// stripChassisRight.setAnimation(ANIM_FIRE);
+		// stripCelebrate.setAnimation(ANIM_FIRE);
 
 		// Wait forever while Client Connection Reader thread runs
 		System.out.println(server.getConfig());
@@ -144,8 +155,10 @@ public class LightsMain {
 			}
 			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e ) {
- 				if (VERBOSE) { System.err.println(e.getMessage()); }
+			} catch (InterruptedException e) {
+				if (VERBOSE) {
+					System.err.println(e.getMessage());
+				}
 			}
 		}
 	}
