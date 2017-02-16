@@ -36,8 +36,7 @@ public class PixelStrip {
 	 */
 	private Animation animation;
 
-	protected PixelStrip(OpcDevice device, int pin, int pixCount, int offset,
-			String desc) {
+	protected PixelStrip(OpcDevice device, int pin, int pixCount, int offset, String desc) {
 		assert device != null;
 		assert pixCount > 0 && pixCount <= 64;
 		this.opcDevice = device;
@@ -55,7 +54,15 @@ public class PixelStrip {
 	 */
 	protected boolean animate() {
 		if (this.animation != null) {
-			return this.animation.draw(this);
+			boolean redrawNeeded = false;
+			try {
+				redrawNeeded = this.animation.draw(this);
+			} catch (Exception ee) {
+				try { this.animation.reset(this); } catch (Exception e) { e.printStackTrace(); }
+				ee.printStackTrace();
+				redrawNeeded = true;
+			}
+			return redrawNeeded;
 		}
 		return false;
 	}
@@ -101,39 +108,45 @@ public class PixelStrip {
 		if (this.animation == null) {
 			this.clear();
 		} else {
-			this.animation.reset(this);
+			try { this.animation.reset(this); } catch (Exception e) { e.printStackTrace(); }
 		}
 	}
-	
+
 	/**
-	 * @return the current running Animation.  May be null.
+	 * @return the current running Animation. May be null.
 	 */
 	public Animation getAnimation() {
 		return this.animation;
 	}
-	
+
 	/**
-	 * Push a number value to the currently running animation.  This only 
-	 * applies if the Animation has been defined as reactive to the environment.
+	 * Push a number value to the currently running animation. This only applies
+	 * if the Animation has been defined as reactive to the environment.
 	 */
 	public void setValue(double n) {
 		if (this.animation != null) {
-			this.animation.setValue(n);
+			try {
+				this.animation.setValue(n);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	/**
 	 * Set a pixel color within the global pixel map of this strip.
 	 * 
-	 * @param pixelNumber absolute number of the pixel within this strip.
-	 * @param c color represented as an integer.
+	 * @param pixelNumber
+	 *            absolute number of the pixel within this strip.
+	 * @param c
+	 *            color represented as an integer.
 	 */
 	public void setPixelColor(int pixelNumber, int color) {
 		assert pixelNumber < this.pixelCount;
 		int opcPixel = pixelNumber + this.firstOpcPixel;
 		this.opcDevice.setPixelColor(opcPixel, color);
 	}
-	
+
 	protected int getMaxOpcPixel() {
 		return this.firstOpcPixel + this.pixelCount;
 	}

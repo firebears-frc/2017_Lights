@@ -1,7 +1,5 @@
 package org.firebears.lights;
 
-import org.junit.internal.runners.statements.Fail;
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import examples.Binary;
 import examples.Caterpillar;
