@@ -34,10 +34,13 @@ import opc.PixelStrip;
 public class LightsMain {
 
 	// Constants for pixel strips
-	public static final String STRIP_CHASSIS_FRONT = "strip_chassis_front";
-	public static final String STRIP_CHASSIS_BACK = "strip_chassis_back";
-	public static final String STRIP_SIGNAL = "strip_celebrate";
-	public static final String STRIP_CHASSIS_BOTTOM = "strip_chassis_bottom";
+	public static final String STRIP_CHASSIS_FRONT1 = "strip_chassis_front1";
+	public static final String STRIP_CHASSIS_FRONT2 = "strip_chassis_front2";
+	public static final String STRIP_CHASSIS_BACK1 = "strip_chassis_back1";
+	public static final String STRIP_CHASSIS_BACK2 = "strip_chassis_back2";
+	public static final String STRIP_CHASSIS_BOTTOM1 = "strip_chassis_bottom1";
+	public static final String STRIP_CHASSIS_BOTTOM2 = "strip_chassis_bottom2";
+	public static final String STRIP_SIGNAL = "strip_signal";
 	// Constants for animations
 	public static final String ANIM_PULSING_GREEN = "ANIM_PULSING_GREEN";
 	public static final String ANIM_PULSING_RED = "ANIM_PULSING_RED";
@@ -133,10 +136,13 @@ public class LightsMain {
 
 		// Initialize pixel strips
 
-		TableWatcher stripChassisFront = initializePixelStripAnimations(fadeCandy, table, 0, 12, STRIP_CHASSIS_FRONT);
-		TableWatcher stripChassisBack = initializePixelStripAnimations(fadeCandy, table, 1, 8, STRIP_CHASSIS_BACK);
+		TableWatcher stripChassisFront1 = initializePixelStripAnimations(fadeCandy, table, 0, 12, STRIP_CHASSIS_FRONT1);
+		TableWatcher stripChassisBack1 = initializePixelStripAnimations(fadeCandy, table, 1, 8, STRIP_CHASSIS_BACK1);
 		TableWatcher stripSignal = initializePixelStripAnimations(fadeCandy, table, 2, 12, STRIP_SIGNAL);
-		TableWatcher stripChassisBottom = initializePixelStripAnimations(fadeCandy, table, 3, 8, STRIP_CHASSIS_BOTTOM);
+		TableWatcher stripChassisBottom1 = initializePixelStripAnimations(fadeCandy, table, 3, 8, STRIP_CHASSIS_BOTTOM1);
+		TableWatcher stripChassisFront2 = initializePixelStripAnimations(fadeCandy, table, 0, 12, STRIP_CHASSIS_FRONT2);
+		TableWatcher stripChassisBack2 = initializePixelStripAnimations(fadeCandy, table, 1, 8, STRIP_CHASSIS_BACK2);
+		TableWatcher stripChassisBottom2 = initializePixelStripAnimations(fadeCandy, table, 3, 8, STRIP_CHASSIS_BOTTOM2);
 
 		// stripChassisLeft.setAnimation(ANIM_FIRE);
 		// stripChassisRight.setAnimation(ANIM_FIRE);
